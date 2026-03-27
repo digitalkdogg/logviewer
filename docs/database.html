@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Documentation - Log Viewer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f8fafc;
+        }
+        h1 { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        h2 { color: #1e293b; margin-top: 2.5rem; border-left: 4px solid #3b82f6; padding-left: 0.75rem; }
+        .table-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        code {
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: ui-monospace, monospace;
+            font-size: 0.85em;
+            color: #ef4444;
+        }
+        .type { color: #2563eb; }
+        .pk { color: #d97706; font-weight: bold; }
+        .fk { color: #7c3aed; font-weight: bold; }
+        .relationship-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .enum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .enum-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .enum-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Database Schema Documentation</h1>
+    <p>The Log Viewer uses a <strong>MySQL</strong> database managed via Prisma ORM. This document describes the tables, columns, and relationships.</p>
+
+    <h2>Tables</h2>
+
+    <!-- Deployments Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="3">deployments <span style="font-weight: normal; text-transform: none; color: #64748b;">(Top-level deployment runs)</span></th>
+                </tr>
+                <tr>
+                    <th>Column</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="pk">id</span></td>
+                    <td class="type">CHAR(36)</td>
+                    <td>Primary Key (UUID).</td>
+                </tr>
+                <tr>
+                    <td>title</td>
+                    <td class="type">VARCHAR(100)</td>
+                    <td>Human-readable title (e.g., "moneygoup"). Defaults to "myapp".</td>
+                </tr>
+                <tr>
+                    <td>created_at</td>
+                    <td class="type">DATETIME</td>
+                    <td>Timestamp when the deployment record was created.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Steps Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="3">steps <span style="font-weight: normal; text-transform: none; color: #64748b;">(Individual tasks within a deployment)</span></th>
+                </tr>
+                <tr>
+                    <th>Column</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="pk">id</span></td>
+                    <td class="type">INT (AI)</td>
+                    <td>Primary Key. Auto-incrementing integer.</td>
+                </tr>
+                <tr>
+                    <td><span class="fk">deployment_id</span></td>
+                    <td class="type">CHAR(36)</td>
+                    <td>Foreign Key referencing <code>deployments.id</code>.</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td class="type">VARCHAR(255)</td>
+                    <td>Name of the step (e.g., "docker_build").</td>
+                </tr>
+                <tr>
+                    <td>status</td>
+                    <td class="type">ENUM</td>
+                    <td>Current status (see <code>steps_status</code> enum).</td>
+                </tr>
+                <tr>
+                    <td>started_at</td>
+                    <td class="type">DATETIME</td>
+                    <td>When the step execution started.</td>
+                </tr>
+                <tr>
+                    <td>finished_at</td>
+                    <td class="type">DATETIME</td>
+                    <td>When the step execution completed.</td>
+                </tr>
+                <tr>
+                    <td>duration_ms</td>
+                    <td class="type">INT</td>
+                    <td>Total duration in milliseconds.</td>
+                </tr>
+                <tr>
+                    <td>created_at</td>
+                    <td class="type">DATETIME</td>
+                    <td>Record creation timestamp.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Events Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="3">events <span style="font-weight: normal; text-transform: none; color: #64748b;">(Lifecycle milestones for a step)</span></th>
+                </tr>
+                <tr>
+                    <th>Column</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="pk">id</span></td>
+                    <td class="type">INT (AI)</td>
+                    <td>Primary Key.</td>
+                </tr>
+                <tr>
+                    <td><span class="fk">step_id</span></td>
+                    <td class="type">INT</td>
+                    <td>Foreign Key referencing <code>steps.id</code>.</td>
+                </tr>
+                <tr>
+                    <td>event_type</td>
+                    <td class="type">ENUM</td>
+                    <td>Type of event (see <code>events_event_type</code> enum).</td>
+                </tr>
+                <tr>
+                    <td>created_at</td>
+                    <td class="type">DATETIME</td>
+                    <td>Timestamp of the event.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Child Events (Logs) Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="3">child_events <span style="font-weight: normal; text-transform: none; color: #64748b;">(Detailed logs/output for a step)</span></th>
+                </tr>
+                <tr>
+                    <th>Column</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="pk">id</span></td>
+                    <td class="type">INT (AI)</td>
+                    <td>Primary Key.</td>
+                </tr>
+                <tr>
+                    <td><span class="fk">step_id</span></td>
+                    <td class="type">INT</td>
+                    <td>Foreign Key referencing <code>steps.id</code>.</td>
+                </tr>
+                <tr>
+                    <td>log</td>
+                    <td class="type">TEXT</td>
+                    <td>The actual log message content.</td>
+                </tr>
+                <tr>
+                    <td>log_type</td>
+                    <td class="type">ENUM</td>
+                    <td>Standard output or error (see <code>log_type</code> enum).</td>
+                </tr>
+                <tr>
+                    <td>created_at</td>
+                    <td class="type">DATETIME</td>
+                    <td>When this log entry was captured.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Relationships</h2>
+    <div class="relationship-box">
+        <ul>
+            <li><strong>Deployments &rarr; Steps:</strong> One-to-Many. One deployment contains multiple steps.</li>
+            <li><strong>Steps &rarr; Events:</strong> One-to-Many. Each step has multiple lifecycle events (start, finish, etc).</li>
+            <li><strong>Steps &rarr; Logs:</strong> One-to-Many. Each step can produce many log lines (child_events).</li>
+        </ul>
+    </div>
+
+    <h2>Enums</h2>
+    <div class="enum-grid">
+        <div class="enum-card">
+            <span class="enum-title">steps_status</span>
+            <ul>
+                <li><code>pending</code></li>
+                <li><code>running</code></li>
+                <li><code>success</code></li>
+                <li><code>failed</code></li>
+            </ul>
+        </div>
+        <div class="enum-card">
+            <span class="enum-title">events_event_type</span>
+            <ul>
+                <li><code>start</code></li>
+                <li><code>finish</code></li>
+                <li><code>error</code></li>
+            </ul>
+        </div>
+        <div class="enum-card">
+            <span class="enum-title">child_events_log_type</span>
+            <ul>
+                <li><code>stdout</code></li>
+                <li><code>stderr</code></li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

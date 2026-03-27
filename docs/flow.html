@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Flow - Log Viewer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f3f4f6;
+        }
+        h1 { color: #111827; text-align: center; margin-bottom: 2rem; }
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+        }
+        .step-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        .step-card::after {
+            content: "↓";
+            position: absolute;
+            bottom: -1.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: #9ca3af;
+        }
+        .step-card:last-child::after { content: ""; }
+        .step-title {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .route {
+            font-family: monospace;
+            font-size: 0.875rem;
+            background: #f3f4f6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: #4b5563;
+        }
+        .description { color: #4b5563; }
+        .side-note {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #e5e7eb;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .highlight { color: #2563eb; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <h1>Log Viewer Application Flow</h1>
+
+    <div class="flow-container">
+        <!-- Dashboard -->
+        <div class="step-card">
+            <div class="step-title">
+                1. Deployments Dashboard
+                <span class="route">/</span>
+            </div>
+            <p class="description">
+                The entry point of the application. Users see a high-level list of all deployments.
+            </p>
+            <div class="side-note">
+                <strong>Key Features:</strong> Search by ID/Title, Status Badges (Success/Failed/Running), Creation timestamps, and direct links to details.
+            </div>
+        </div>
+
+        <!-- Deployment Details -->
+        <div class="step-card">
+            <div class="step-title">
+                2. Deployment Detail View
+                <span class="route">/deployments/[id]</span>
+            </div>
+            <p class="description">
+                Detailed timeline for a specific deployment run.
+            </p>
+            <div class="side-note">
+                <strong>Key Features:</strong> Vertical timeline of steps, Step status visualization, Duration tracking, and navigation to specific step logs.
+            </div>
+        </div>
+
+        <!-- Step Details -->
+        <div class="step-card">
+            <div class="step-title">
+                3. Step & Log Analysis
+                <span class="route">/steps/[id]</span>
+            </div>
+            <p class="description">
+                Granular view of a single step within a deployment.
+            </p>
+            <div class="side-note">
+                <strong>Key Features:</strong> Lifecycle event tracking (Start/Finish), Log summary (Stdout vs Stderr count), and a full Log Panel with ANSI-supported output rendering.
+            </div>
+        </div>
+
+        <!-- Task Runner -->
+        <div class="step-card">
+            <div class="step-title">
+                Alternative: Task Runner
+                <span class="route">/tasks</span>
+            </div>
+            <p class="description">
+                A specialized interface to manually trigger new deployment tasks.
+            </p>
+            <div class="side-note">
+                <strong>Inputs:</strong> App Name, Working Directory, and a JSON-formatted list of shell commands to execute as steps.
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 3rem; text-align: center; color: #6b7280; font-size: 0.875rem;">
+        &copy; 2026 Log Viewer System
+    </div>
+</body>
+</html>
