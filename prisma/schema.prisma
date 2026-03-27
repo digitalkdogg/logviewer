@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model child_events {
+  id         Int                    @id @default(autoincrement())
+  step_id    Int?
+  log        String?                @db.Text
+  log_type   child_events_log_type?
+  created_at DateTime?              @default(now()) @db.DateTime(0)
+  steps      steps?                 @relation(fields: [step_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "child_events_ibfk_1")
+
+  @@index([step_id], map: "step_id")
+}
+
+model deployments {
+  id         String    @id @db.Char(36)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+  title      String    @default("myapp") @db.VarChar(100)
+  steps      steps[]
+}
+
+model events {
+  id         Int                @id @default(autoincrement())
+  step_id    Int?
+  event_type events_event_type?
+  created_at DateTime?          @default(now()) @db.DateTime(0)
+  steps      steps?             @relation(fields: [step_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "events_ibfk_1")
+
+  @@index([step_id], map: "step_id")
+}
+
+model steps {
+  id            Int            @id @default(autoincrement())
+  deployment_id String?        @db.Char(36)
+  name          String?        @db.VarChar(255)
+  status        steps_status?
+  started_at    DateTime?      @db.DateTime(0)
+  finished_at   DateTime?      @db.DateTime(0)
+  duration_ms   Int?
+  created_at    DateTime?      @default(now()) @db.DateTime(0)
+  child_events  child_events[]
+  events        events[]
+  deployments   deployments?   @relation(fields: [deployment_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "steps_ibfk_1")
+
+  @@index([deployment_id], map: "deployment_id")
+}
+
+enum events_event_type {
+  start
+  finish
+  error
+}
+
+enum steps_status {
+  pending
+  running
+  success
+  failed
+}
+
+enum child_events_log_type {
+  stdout
+  stderr
+}
