@@ -23,6 +23,18 @@ model deployments {
   created_at DateTime? @default(now()) @db.DateTime(0)
   title      String    @default("myapp") @db.VarChar(100)
   steps      steps[]
+  tasks      tasks[]
+}
+
+model tasks {
+  task_id       Int          @id @default(autoincrement())
+  deployment_id String       @db.Char(36)
+  task_name     String       @db.VarChar(255)
+  file_name     String       @db.VarChar(255)
+  created_at    DateTime?    @default(now()) @db.DateTime(0)
+  deployments   deployments  @relation(fields: [deployment_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "tasks_ibfk_1")
+
+  @@index([deployment_id], map: "deployment_id")
 }
 
 model events {
