@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=3002 next dev",
     "build": "export $(grep -v '^#' .env.production | xargs) && next build",
-    "start": "next start",
+    "start": "PORT=3002 next start",
     "lint": "eslint"
   },
   "dependencies": {
