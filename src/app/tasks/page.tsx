@@ -227,7 +227,11 @@ export default function TasksPage() {
             <h1 className="text-3xl font-bold text-zinc-900 mb-2">Run Task</h1>
             <p className="text-zinc-500">Configure and execute a deployment pipeline.</p>
           </header>
-          <TaskForm initialData={formValues} onSubmit={handleFormSubmit} />
+          <TaskForm 
+            key={selectedTaskForEdit ? (selectedTaskForEdit.id ?? selectedTaskForEdit.task_id) : 'new-task'}
+            initialData={formValues} 
+            onSubmit={handleFormSubmit} 
+          />
         </section>
 
         <StaleJobsList jobs={staleJobs} />
