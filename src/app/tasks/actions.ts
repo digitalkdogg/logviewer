@@ -26,9 +26,9 @@ export async function createTask(prevState: ActionState, formData: FormData): Pr
     '',
     `cd ${process.cwd()} || exit 1`,
     '',
-    `/usr/bin/python3 ${process.cwd()}/deploy.py `,
-    `  --app ${app_name} `,
-    `  --workdir ${workdir} `,
+    `/usr/bin/python3 ${process.cwd()}/deploy.py \\`,
+    `  --app ${app_name} \\`,
+    `  --workdir ${workdir} \\`,
     `  --steps '${steps}'`, // NOTE: This assumes 'steps' content doesn't contain single quotes. For robustness, further escaping might be needed.
     '',
   ].join('\n');
@@ -85,9 +85,9 @@ export async function runTask(prevState: ActionState, formData: FormData): Promi
     '',
     `cd ${process.cwd()} || exit 1`,
     '',
-    `/usr/bin/python3 ${process.cwd()}/deploy.py `,
-    `  --app ${app_name} `,
-    `  --workdir ${workdir} `,
+    `/usr/bin/python3 ${process.cwd()}/deploy.py \\`,
+    `  --app ${app_name} \\`,
+    `  --workdir ${workdir} \\`,
     `  --steps '${steps}'`, // NOTE: This assumes 'steps' content doesn't contain single quotes. For robustness, further escaping might be needed.
     '',
   ].join('\n');
@@ -159,8 +159,8 @@ export async function runExistingTask(formData: FormData) {
         '',
         `cd ${process.cwd()} || exit 1`,
         '',
-        `/usr/bin/python3 ${process.cwd()}/deploy.py `,
-        `  --app ${task.task_name} `,
+        `/usr/bin/python3 ${process.cwd()}/deploy.py \\`,
+        `  --app ${task.task_name} \\`,
         '',
       ].join('\n');
       
