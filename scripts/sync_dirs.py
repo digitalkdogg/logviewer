@@ -50,9 +50,14 @@ def sync_pair(src: str, dst: str) -> list[tuple[str, str]]:
             dst_dir  = os.path.join(dst, rel_root) if rel_root != "." else dst
             dst_file = os.path.join(dst_dir, filename)
 
-            src_size   = os.path.getsize(src_file)
-            dst_exists = os.path.exists(dst_file)
-            needs_copy = (not dst_exists) or (os.path.getsize(dst_file) != src_size)
+            try:
+                # Get sizes. For broken symlinks, getsize() raises OSError.
+                src_size   = os.path.getsize(src_file)
+                dst_exists = os.path.exists(dst_file)
+                needs_copy = (not dst_exists) or (os.path.getsize(dst_file) != src_size)
+            except OSError:
+                # This handles broken symlinks or files that disappear during walk
+                continue
 
             if needs_copy:
                 reason = "new file" if not dst_exists else "size changed"

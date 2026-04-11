@@ -15,11 +15,10 @@ from dotenv import load_dotenv
 # -----------------------------------------
 
 import pathlib
-BASE_DIR = pathlib.Path(__file__).parent.resolve()
+#BASE_DIR = pathlib.Path(__file__).parent.resolve()
+BASE_DIR = pathlib.Path(__file__).parent.parent.resolve()
 load_dotenv(BASE_DIR / '.env.local', override=False)
 load_dotenv(BASE_DIR / '.env.production', override=True)
-
-
 
 
 #load_dotenv('.env.local', override=False)
@@ -55,7 +54,8 @@ def get_conn():
 
 DEFAULT_STEPS = [
     {"name": "git_pull",     "cmd": "git pull origin main"},
-    {"name": "sync_script",  "cmd": "python3 deepmoney_sync.py"},
+    # Modified sync_script step to directly call sync_dirs.py with config
+    {"name": "sync_script",  "cmd": "python3 sync_dirs.py --config sync_config.json"},
     {"name": "docker_stop",  "cmd": "docker stop moneygoup",  "ignore_error": True},
     {"name": "docker_rm",    "cmd": "docker rm moneygoup",    "ignore_error": True},
     {"name": "docker_build", "cmd": "docker build -t moneygoup ."},

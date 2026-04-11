@@ -23,7 +23,7 @@ export default function TaskForm() {
             type="text"
             name="app_name"
             required
-            placeholder="moneygoup"
+            placeholder="Enter app name"
             className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-zinc-400"
           />
         </div>
@@ -33,7 +33,7 @@ export default function TaskForm() {
             type="text"
             name="workdir"
             required
-            placeholder="/Volume1/www/moneygoup"
+            placeholder="Enter working directory"
             className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-zinc-400"
           />
         </div>

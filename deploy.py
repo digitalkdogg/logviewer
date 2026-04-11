@@ -55,7 +55,6 @@ def get_conn():
 
 DEFAULT_STEPS = [
     {"name": "git_pull",     "cmd": "git pull origin main"},
-    {"name": "sync_script",  "cmd": "python3 deepmoney_sync.py"},
     {"name": "docker_stop",  "cmd": "docker stop moneygoup",  "ignore_error": True},
     {"name": "docker_rm",    "cmd": "docker rm moneygoup",    "ignore_error": True},
     {"name": "docker_build", "cmd": "docker build -t moneygoup ."},

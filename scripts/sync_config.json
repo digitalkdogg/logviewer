@@ -3,10 +3,7 @@
     "source": "/Volume1/Documents",
     "destination": "/Volume1/@usb/usbshare_sdc1/Documents"
   },
-  {
-    "source": "/Volume1/Movies",
-    "destination": "/Volume1/@usb/usbshare_sdc1/Movies"
-  },  {
+ {
     "source": "/Volume1/Projects",
     "destination": "/Volume1/@usb/usbshare_sdc1/Projects"
   },
